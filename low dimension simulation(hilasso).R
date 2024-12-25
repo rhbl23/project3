@@ -82,3 +82,19 @@ for (i in 1:length(nn)) {
     if (counter < nrow(res_hi)) counter <- counter + 1
   }
 }
+
+compute_aggregated_metrics(res_hi)
+$sensitivity
+[1] 0.6766667
+
+$specificity
+[1] 0.9314286
+
+$MCC
+[1] 0.6426929
+
+$g_mean
+[1] 0.7938934
+
+$f1
+[1] 0.7368421
