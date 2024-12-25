@@ -63,7 +63,7 @@ for (i in 1:length(nn)) {
     
     # Fit Random Lasso model
     random_lasso <- RandomLasso(q1 = 10, q2 = 10, B = 'auto', 
-                                random_state = 123, L = 30, threshold = 0.1)
+                                random_state = 123, L = 30, threshold = 0.01)
     random_lasso <- fit.RandomLasso(random_lasso, x_matrix, y_vector)
     
     # Extract the coefficients for intercept and x1 to x20
@@ -153,4 +153,17 @@ compute_aggregated_metrics <- function(res_lasso) {
 }
 
 compute_aggregated_metrics(res_random)
+$sensitivity
+[1] 0.9866667
 
+$specificity
+[1] 0.2442857
+
+$MCC
+[1] 0.2785391
+
+$g_mean
+[1] 0.4909466
+
+$f1
+[1] 0.5262222
