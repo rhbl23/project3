@@ -37,13 +37,13 @@ for (i in 1:length(nn)) {
     dd <- gendat_select(j, nn[i])
     
     # Prepare the data for Stability Selection
-    x_matrix <- as.matrix(dd[, -1])  # Covariates (x1 to x20)
+    x_matrix <- as.matrix(dd[, -1])  # Covariates (x1 to x100)
     y_vector <- dd$y                 # Outcome variable
     
     # Fit Stability Selection Lasso model
     stabs_lasso <- stabsel(x_matrix, y_vector, fitfun = glmnet.lasso, cutoff = 0.75,PFER = 1)
     
-    # Extract the probabilities for intercept and x1 to x20
+    # Extract the probabilities for x1 to x100
     res_stabs[counter, 3:102] <- stabs_lasso$max[1:100] 
     
     # Increment the counter
@@ -78,7 +78,7 @@ f1_score <- function(tp, fp, fn) {
 compute_aggregated_metrics_stabs <- function(res_stabs) {
   nnr <- nrow(res_stabs)
   
-  # True variables (x1 to x5 are relevant, x6 to x10 are noise)
+  # True variables (x1 to x10 are relevant, x11 to x100 are noise)
   true_relevant <- c(rep(1,10) , rep(0,90))  # True relevance of variables x1 to x10
   
   # Initialize counters for TP, TN, FP, and FN across all simulations
