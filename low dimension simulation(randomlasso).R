@@ -109,8 +109,8 @@ f1_score <- function(tp, fp, fn) {
 compute_aggregated_metrics <- function(res_lasso) {
   nnr <- nrow(res_lasso)
   
-  # True variables (x1 to x5 are relevant, x6 to x10 are noise)
-  true_relevant <- c(1, 1, 1, 1, 1, 1, rep(0,14))  # True relevance of variables x1 to x10
+  # True variables (x1 to x6 are relevant, x7 to x20 are noise)
+  true_relevant <- c(1, 1, 1, 1, 1, 1, rep(0,14))  # True relevance of variables x1 to x20
   
   # Initialize counters for TP, TN, FP, and FN across all simulations
   total_tp <- 0
@@ -153,3 +153,17 @@ compute_aggregated_metrics <- function(res_lasso) {
 }
 
 compute_aggregated_metrics(res_random)
+$sensitivity
+[1] 0.89
+
+$specificity
+[1] 0.8814286
+
+$MCC
+[1] 0.7411646
+
+$g_mean
+[1] 0.8857039
+
+$f1
+[1] 0.8215385
