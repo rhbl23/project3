@@ -9,7 +9,7 @@ gendat_select <- function(seed, n) {
   x4 <- rnorm(n, 0, 1)
   x5 <- rnorm(n, 0, 1)
   x6 <- rnorm(n, 0, 1)
-  # Noise variables (x7 to x20)
+  # Noise variables (x7 to x10)
   x7 <- rnorm(n, 0, 1)
   x8 <- rnorm(n, 0, 1)
   x9 <- rnorm(n, 0, 1)

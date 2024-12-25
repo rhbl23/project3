@@ -12,7 +12,7 @@ gendat_select <- function(seed, n) {
   x4 <- rnorm(n, 0, 1)
   x5 <- rnorm(n, 0, 1)
   x6 <- rnorm(n, 0, 1)
-  # Noise variables (x7 to x20)
+  # Noise variables (x7 to x10)
   x7 <- rnorm(n, 0, 1)
   x8 <- rnorm(n, 0, 1)
   x9 <- rnorm(n, 0, 1)
@@ -116,8 +116,8 @@ f1_score <- function(tp, fp, fn) {
 compute_aggregated_metrics <- function(res_lasso) {
   nnr <- nrow(res_lasso)
   
-  # True variables (x1 to x6 are relevant, x7 to x20 are noise)
-  true_relevant <- c(1, 1, 1, 1, 1, 1, rep(0,14))  # True relevance of variables x1 to x20
+  # True variables (x1 to x5 are relevant, x6 to x10 are noise)
+  true_relevant <- c(1, 1, 1, 1, 1, 1, rep(0,14))  # True relevance of variables x1 to x10
   
   # Initialize counters for TP, TN, FP, and FN across all simulations
   total_tp <- 0
@@ -160,20 +160,4 @@ compute_aggregated_metrics <- function(res_lasso) {
 }
 
 compute_aggregated_metrics(res_lasso)
-
-#result
-#$sensitivity
-#[1] 0.9666667
-
-#$specificity
-#[1] 0.5657143
-
-#$MCC
-#[1] 0.4967935
-
-#$g_mean
-#[1] 0.7394979
-
-#$f1
-#[1] 0.6487696
 
