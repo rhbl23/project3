@@ -68,7 +68,7 @@ for (i in 1:length(nn)) {
     
     # Extract the coefficients for intercept and x1 to x20
     res_hi[counter,3] <- hi_lasso$intercept_
-    res_hi[counter, 4:23] <- hi_lasso$coefficients[1:20]  # 1 intercept + 20 coefficients
+    res_hi[counter, 4:23] <- hi_lasso$coef_[1:20]  # 1 intercept + 20 coefficients
     
     
     # Calculate and store the estimated residual variance (sigma^2)
