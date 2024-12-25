@@ -68,7 +68,7 @@ for (i in 1:length(nn)) {
     
     # Extract the coefficients for intercept and x1 to x20
     res_random[counter,3] <- random_lasso$intercept_
-    res_random[counter, 4:23] <- random_lasso$coefficients[1:20]  # 1 intercept + 20 coefficients
+    res_random[counter, 4:23] <- random_lasso$coef_[1:20]  # 1 intercept + 20 coefficients
     
     # Calculate and store the estimated residual variance (sigma^2)
     y_pred <- x_matrix %*% random_lasso$coefficients[-1] + random_lasso$intercept_
@@ -153,17 +153,4 @@ compute_aggregated_metrics <- function(res_lasso) {
 }
 
 compute_aggregated_metrics(res_random)
-$sensitivity
-[1] 0.89
 
-$specificity
-[1] 0.8814286
-
-$MCC
-[1] 0.7411646
-
-$g_mean
-[1] 0.8857039
-
-$f1
-[1] 0.8215385
