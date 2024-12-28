@@ -122,4 +122,17 @@ compute_aggregated_metrics_stabs <- function(res_stabs) {
 }
 
 compute_aggregated_metrics_stabs(res_stabs)
+$sensitivity
+[1] 0.312
 
+$specificity
+[1] 0.9995556
+
+$MCC
+[1] 0.5343008
+
+$g_mean
+[1] 0.5584455
+
+$f1
+[1] 0.4741641
