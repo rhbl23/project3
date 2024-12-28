@@ -86,5 +86,3 @@ for (i in 1:length(nn)) {
 compute_aggregated_metrics(res_hi)
 
 
-$f1
-[1] 0.8023952
