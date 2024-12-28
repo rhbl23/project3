@@ -84,17 +84,7 @@ for (i in 1:length(nn)) {
 }
 
 compute_aggregated_metrics(res_hi)
-$sensitivity
-[1] 0.67
 
-$specificity
-[1] 1
-
-$MCC
-[1] 0.7661486
-
-$g_mean
-[1] 0.8185353
 
 $f1
 [1] 0.8023952
