@@ -134,3 +134,17 @@ compute_aggregated_metrics <- function(res_lasso) {
 
 
 compute_aggregated_metrics(res_hi)
+$sensitivity
+[1] 0.658
+
+$specificity
+[1] 0.9746667
+
+$MCC
+[1] 0.6679206
+
+$g_mean
+[1] 0.8008312
+
+$f1
+[1] 0.6977731
