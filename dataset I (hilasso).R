@@ -1,39 +1,19 @@
 gendat_select <- function(seed, n) {
   # Set seed for reproducibility
-  set.seed(seed)
-  
-  # Generate covariates
-  x1 <- rnorm(n, 0, 1)
-  x2 <- rnorm(n, 0, 1)
-  x3 <- rnorm(n, 0, 1)
-  x4 <- rnorm(n, 0, 1)
-  x5 <- rnorm(n, 0, 1)
-  x6 <- rnorm(n, 0, 1)
-  # Noise variables (x7 to x10)
-  x7 <- rnorm(n, 0, 1)
-  x8 <- rnorm(n, 0, 1)
-  x9 <- rnorm(n, 0, 1)
-  x10 <- rnorm(n, 0, 1)
-  x11 <- rnorm(n, 0, 1)
-  x12 <- rnorm(n, 0, 1)
-  x13 <- rnorm(n, 0, 1)
-  x14 <- rnorm(n, 0, 1)
-  x15 <- rnorm(n, 0, 1)
-  x16 <- rnorm(n, 0, 1)
-  x17 <- rnorm(n, 0, 1)
-  x18 <- rnorm(n, 0, 1)
-  x19 <- rnorm(n, 0, 1)
-  x20 <- rnorm(n, 0, 1)
+ set.seed(seed)
+  l <- list()
+  for (i in 1:20) {
+    l[[paste0("x", i)]] <- rnorm(n, 0, 1)
+  }
   
   # Generate error term
   epsilon <- rnorm(n, 0, 1)
   
   # Linear model to generate y (x1 to x6 contribute to y, while x7 to x20 are noise)
-  y <- 0.2 + 3*x1 + 2*x2 + 1.2*x3 + 0.5*x4 + 0.2*x5 + 1.5*x6+epsilon
+  y <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6+epsilon
   
   # Return a data frame with y and covariates
-  data <- data.frame(y, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10,
-                     x11, x12, x13, x14, x15, x16, x17, x18, x19, x20)
+  data <- data.frame(y, l)
   
   return(data)
 }
