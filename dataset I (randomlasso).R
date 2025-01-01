@@ -10,7 +10,7 @@ gendat_select <- function(seed, n) {
   epsilon <- rnorm(n, 0, 1)
   
   # Linear model to generate y (x1 to x6 contribute to y, while x7 to x20 are noise)
-  y <- 0.2 + 3*x1 + 2*x2 + 1.2*x3 + 0.5*x4 + 0.2*x5 + 1.5*x6+epsilon
+  y <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6+epsilon
   
   # Return a data frame with y and covariates
   data <- data.frame(y, l)
