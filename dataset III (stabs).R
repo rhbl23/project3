@@ -1,6 +1,6 @@
 gendat_select <- function(seed, n){
   
-  desired_SNR = 5
+  desired_SNR = 2
   
   beta = c(3, 2, 1.2, 0.5, 0.2, 1.5, rep(0, 14))
   
@@ -138,3 +138,17 @@ compute_aggregated_metrics_stabs <- function(res_stabs) {
 }
 
 compute_aggregated_metrics_stabs(res_stabs)
+$sensitivity
+[1] 0.2966667
+
+$specificity
+[1] 1
+
+$MCC
+[1] 0.4774459
+
+$g_mean
+[1] 0.5446712
+
+$f1
+[1] 0.4575835
