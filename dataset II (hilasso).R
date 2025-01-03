@@ -50,7 +50,7 @@ for (i in 1:length(nn)) {
     hi_lasso <- HiLasso(q1 = 50, q2 = 50, random_state = 123, L = 30)
     hi_lasso <- fit.HiLasso(hi_lasso, x_matrix, y_vector)
     
-    # Extract the coefficients for intercept and x1 to x20
+    # Extract the coefficients for intercept and x1 to x100
     res_hi[counter,3] <- hi_lasso$intercept_
     res_hi[counter, 4:103] <- hi_lasso$coef_[1:100]  # 1 intercept + 100 coefficients
     
