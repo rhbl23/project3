@@ -3,15 +3,23 @@ library(glmnet)
 gendat_select <- function(seed, n) {
   # Set seed for reproducibility
   set.seed(seed)
+  desired_SNR = 2
+  
   l <- list()
   for (i in 1:100) {
     l[[paste0("x", i)]] <- rnorm(n, 0, 1)
   }
   
   # Linear model to generate y (x1 to x10 contribute to y, while x11 to x100 are noise)
-  y <- 0.2 + 3 * l$x1 + 2 * l$x2 + 1.2 * l$x3 + 0.5 * l$x4 + 0.2 * l$x5 +
-    1.5 * l$x6 + 5 * l$x7 + 0.3 * l$x8 + 2.5 * l$x9 + 4 * l$x10 + rnorm(n, 0, 1)
+  y_signal <- 0.2 + 3 * l$x1 + 2 * l$x2 + 1.2 * l$x3 + 0.5 * l$x4 + 0.2 * l$x5 +
+    1.5 * l$x6 + 5 * l$x7 + 0.3 * l$x8 + 2.5 * l$x9 + 4 * l$x10 
   
+  y_signal <- scale(y_signal, center = TRUE, scale = FALSE) 
+  var_signal <- var(as.vector(y_signal))
+  var_noise <- var_signal / desired_SNR
+  sigma <- sqrt(var_noise)
+  noise <- rnorm(n, mean = 0, sd = sigma)
+  y <- y_signal + noise + 0.2  # Adds back the intercept
   data <- data.frame(y, l)
   
   return(data)
@@ -135,16 +143,16 @@ compute_aggregated_metrics <- function(res_lasso) {
 
 compute_aggregated_metrics(res_hi)
 $sensitivity
-[1] 0.658
+[1] 0.52
 
 $specificity
-[1] 0.9746667
+[1] 0.8795556
 
 $MCC
-[1] 0.6679206
+[1] 0.326633
 
 $g_mean
-[1] 0.8008312
+[1] 0.6762905
 
 $f1
-[1] 0.6977731
+[1] 0.3993856
