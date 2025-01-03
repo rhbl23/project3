@@ -42,7 +42,7 @@ for (i in 1:length(nn)) {
     dd <- gendat_select(j, nn[i])
     
     # Prepare the data for Random Lasso
-    x_matrix <- as.matrix(dd[, -1])  # Covariates (x1 to x20)
+    x_matrix <- as.matrix(dd[, -1])  # Covariates (x1 to x100)
     y_vector <- dd$y                 # Outcome variable
     
     # Fit Random Lasso model
