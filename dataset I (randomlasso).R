@@ -1,16 +1,22 @@
 gendat_select <- function(seed, n) {
   # Set seed for reproducibility
- set.seed(seed)
+  set.seed(seed)
+  
+  desired_SNR = 5
+  
   l <- list()
   for (i in 1:20) {
     l[[paste0("x", i)]] <- rnorm(n, 0, 1)
   }
   
-  # Generate error term
-  epsilon <- rnorm(n, 0, 1)
-  
   # Linear model to generate y (x1 to x6 contribute to y, while x7 to x20 are noise)
-  y <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6+epsilon
+  y_signal <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6
+  y_signal <- scale(y_signal, center = TRUE, scale = FALSE) 
+  var_signal <- var(as.vector(y_signal))
+  var_noise <- var_signal / desired_SNR
+  sigma <- sqrt(var_noise)
+  noise <- rnorm(n, mean = 0, sd = sigma)
+  y <- y_signal + noise + 0.2  # Adds back the intercept
   
   # Return a data frame with y and covariates
   data <- data.frame(y, l)
@@ -134,16 +140,17 @@ compute_aggregated_metrics <- function(res_lasso) {
 
 compute_aggregated_metrics(res_random)
 $sensitivity
-[1] 0.98
+[1] 0.8866667
 
 $specificity
-[1] 0.4728571
+[1] 0.7428571
 
 $MCC
-[1] 0.439035
+[1] 0.5803627
 
 $g_mean
-[1] 0.6807349
+[1] 0.8115828
 
 $f1
-[1] 0.6105919
+[1] 0.7131367
+
