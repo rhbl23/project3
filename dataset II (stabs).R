@@ -4,18 +4,24 @@ library(glmnet)
 gendat_select <- function(seed, n) {
   # Set seed for reproducibility
   set.seed(seed)
-  variables <- list()
+  desired_SNR = 5
+  
+  l <- list()
   for (i in 1:100) {
-    variables[[paste0("x", i)]] <- rnorm(n, 0, 1)
+    l[[paste0("x", i)]] <- rnorm(n, 0, 1)
   }
   
-  x1_to_x10 <- as.data.frame(variables[paste0("x", 1:10)])
-  coefficients <- c(3, 2, 1.2, 0.5, 0.2, 1.5, 5, 0.3, 2.5, 4)
-  
   # Linear model to generate y (x1 to x10 contribute to y, while x11 to x100 are noise)
-  y <- 0.2 + rowSums(as.matrix(x1_to_x10) %*% diag(coefficients)) + rnorm(n, 0, 1)
+  y_signal <- 0.2 + 3 * l$x1 + 2 * l$x2 + 1.2 * l$x3 + 0.5 * l$x4 + 0.2 * l$x5 +
+    1.5 * l$x6 + 5 * l$x7 + 0.3 * l$x8 + 2.5 * l$x9 + 4 * l$x10 
   
-  data <- data.frame(y, variables)
+  y_signal <- scale(y_signal, center = TRUE, scale = FALSE) 
+  var_signal <- var(as.vector(y_signal))
+  var_noise <- var_signal / desired_SNR
+  sigma <- sqrt(var_noise)
+  noise <- rnorm(n, mean = 0, sd = sigma)
+  y <- y_signal + noise + 0.2  # Adds back the intercept
+  data <- data.frame(y, l)
   
   return(data)
 }
@@ -123,16 +129,16 @@ compute_aggregated_metrics_stabs <- function(res_stabs) {
 
 compute_aggregated_metrics_stabs(res_stabs)
 $sensitivity
-[1] 0.312
+[1] 0.214
 
 $specificity
-[1] 0.9995556
+[1] 0.9991111
 
 $MCC
-[1] 0.5343008
+[1] 0.4339362
 
 $g_mean
-[1] 0.5584455
+[1] 0.4623957
 
 $f1
-[1] 0.4741641
+[1] 0.3502455
