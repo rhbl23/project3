@@ -1,37 +1,25 @@
 library("stabs")
 library(glmnet)
 
-set.seed(123)   # For reproducibility
-
-# Step 1: Generate a synthetic dataset
-n <- 100  # Number of observations
-p <- 20   # Number of predictors
-X <- matrix(rnorm(n * p), n, p) # Predictor matrix with n rows and p columns
-
-# Define the true beta vector with 6 non-zero coefficients and 14 zeros
-beta <- c(3, 2, 1.2, 0.5, 0.2, 1.5, rep(0, p - 6)) # 6 non-zero coefficients + 14 zeros = 20
-inter <- 0.2
-y <- inter + X %*% beta + rnorm(n)
-
-stabsel_fit <- stabsel(X, y, fitfun = glmnet.lasso, cutoff = 0.75,PFER = 1)
-print(stabsel_fit)
-stabsel_fit$max
-
-
-#simulation
 gendat_select <- function(seed, n) {
   # Set seed for reproducibility
- set.seed(seed)
+  set.seed(seed)
+  
+  desired_SNR = 2
+  
   l <- list()
   for (i in 1:20) {
     l[[paste0("x", i)]] <- rnorm(n, 0, 1)
   }
   
-  # Generate error term
-  epsilon <- rnorm(n, 0, 1)
-  
   # Linear model to generate y (x1 to x6 contribute to y, while x7 to x20 are noise)
-  y <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6+epsilon
+  y_signal <- 0.2 + 3*l$x1 + 2*l$x2 + 1.2*l$x3 + 0.5*l$x4 + 0.2*l$x5 + 1.5*l$x6
+  y_signal <- scale(y_signal, center = TRUE, scale = FALSE) 
+  var_signal <- var(as.vector(y_signal))
+  var_noise <- var_signal / desired_SNR
+  sigma <- sqrt(var_noise)
+  noise <- rnorm(n, mean = 0, sd = sigma)
+  y <- y_signal + noise + 0.2  # Adds back the intercept
   
   # Return a data frame with y and covariates
   data <- data.frame(y, l)
@@ -143,16 +131,16 @@ compute_aggregated_metrics_stabs <- function(res_stabs) {
 
 compute_aggregated_metrics_stabs(res_stabs)
 $sensitivity
-[1] 0.6466667
+[1] 0.49
 
 $specificity
 [1] 1
 
 $MCC
-[1] 0.7494139
+[1] 0.6341216
 
 $g_mean
-[1] 0.8041559
+[1] 0.7
 
 $f1
-[1] 0.7854251
+[1] 0.6577181
