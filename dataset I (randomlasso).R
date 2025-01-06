@@ -30,9 +30,9 @@ s <- 4     # starting seed
 
 # Create an array for storing results
 nnr <- length(nn) * replicate # total number of runs
-res_random <- array(data=NA, dim=c(nnr, 24), dimnames=list(paste(1:nnr), c(
+res_random <- array(data=NA, dim=c(nnr, 25), dimnames=list(paste(1:nnr), c(
   "nn", "sam", "intercept", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10",
-  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2"))) 
+  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2","mse"))) 
 
 counter <- 1
 for (i in 1:length(nn)) {
@@ -59,6 +59,10 @@ for (i in 1:length(nn)) {
     # Calculate and store the estimated residual variance (sigma^2)
     y_pred <- x_matrix %*% random_lasso$coefficients[-1] + random_lasso$intercept_
     res_random[counter, 24] <- var(y_vector - y_pred)
+    
+    # Calculate and store Mean Squared Error (MSE)
+    mse <- mean((y_vector - y_pred)^2)
+    res_random[counter, 25] <- mse
     
     # Increment the counter
     if (counter < nrow(res_random)) counter <- counter + 1
