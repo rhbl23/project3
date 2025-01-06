@@ -29,8 +29,8 @@ nn <- 50  # sample size
 replicate <- 50
 s <- 4     # starting seed
 nnr <- length(nn) * replicate # total number of runs
-res_hi <- array(data=NA, dim=c(nnr, 104), dimnames=list(paste(1:nnr), c(
-  "nn", "sam", 'intercept', paste0("b", 1:100), "sigma2")))
+res_hi <- array(data=NA, dim=c(nnr, 105), dimnames=list(paste(1:nnr), c(
+  "nn", "sam", 'intercept', paste0("b", 1:100), "sigma2","mse")))
 
 
 counter <- 1
@@ -61,6 +61,10 @@ for (i in 1:length(nn)) {
     intercept <- as.numeric(hi_lasso$intercept_)[1]
     y_pred <- x_matrix %*% hl_coefficients + intercept
     res_hi[counter, 104] <- var(y_vector - y_pred)
+    
+    # Calculate and store Mean Squared Error (MSE)
+    mse <- mean((y_vector - y_pred)^2)
+    res_hi[counter, 25] <- mse
     
     # Increment the counter
     if (counter < nrow(res_hi)) counter <- counter + 1
