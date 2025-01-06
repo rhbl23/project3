@@ -31,9 +31,9 @@ s <- 4     # starting seed
 library(glmnet)
 # Create an array for storing results
 nnr <- length(nn) * replicate # total number of runs
-res_hi <- array(data=NA, dim=c(nnr, 24), dimnames=list(paste(1:nnr), c(
+res_hi <- array(data=NA, dim=c(nnr, 25), dimnames=list(paste(1:nnr), c(
   "nn", "sam", "intercept", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10",
-  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2"))) 
+  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2","mse"))) 
 
 counter <- 1
 for (i in 1:length(nn)) {
@@ -63,6 +63,10 @@ for (i in 1:length(nn)) {
     intercept <- as.numeric(hi_lasso$intercept_)[1]
     y_pred <- x_matrix %*% hl_coefficients + intercept
     res_hi[counter, 24] <- var(y_vector - y_pred)
+  
+    # Calculate and store Mean Squared Error (MSE)
+    mse <- mean((y_vector - y_pred)^2)
+    res_hi[counter, 25] <- mse
     
     # Increment the counter
     if (counter < nrow(res_hi)) counter <- counter + 1
