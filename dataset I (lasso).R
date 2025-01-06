@@ -31,9 +31,9 @@ s <- 4     # starting seed
 library(glmnet)
 # Create an array for storing results
 nnr <- length(nn) * replicate # total number of runs
-res_lasso <- array(data=NA, dim=c(nnr, 24), dimnames=list(paste(1:nnr), c(
+res_lasso <- array(data=NA, dim=c(nnr, 25), dimnames=list(paste(1:nnr), c(
   "nn", "sam", "intercept", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10",
-  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2"))) 
+  "b11", "b12", "b13", "b14", "b15", "b16", "b17", "b18", "b19", "b20","sigma2",'mse'))) 
 
 counter <- 1
 for (i in 1:length(nn)) {
@@ -141,6 +141,8 @@ compute_aggregated_metrics <- function(res_lasso) {
     f1=f1
   ))
 }
+
+boxplot(res_lasso[, "mse"] ~ res_lasso[, "nn"],main='lasso',col="lightblue")
 
 compute_aggregated_metrics(res_lasso)
 $sensitivity
