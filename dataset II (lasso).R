@@ -29,8 +29,8 @@ nn <- 50  # sample size
 replicate <- 50
 s <- 4     # starting seed
 nnr <- length(nn) * replicate # total number of runs
-res_lasso <- array(data=NA, dim=c(nnr, 104), dimnames=list(paste(1:nnr), c(
-  "nn", "sam", 'intercept', paste0("b", 1:100), "sigma2")))
+res_lasso <- array(data=NA, dim=c(nnr, 105), dimnames=list(paste(1:nnr), c(
+  "nn", "sam", 'intercept', paste0("b", 1:100), "sigma2",'mse')))
 
 counter <- 1
 for (i in 1:length(nn)) {
@@ -137,6 +137,8 @@ compute_aggregated_metrics <- function(res_lasso) {
     g_mean = g_mean,
     f1=f1
   ))
+
+boxplot(res_lasso[, "mse"] ~ res_lasso[, "nn"],main='lasso',col="lightblue")
 
 compute_aggregated_metrics(res_lasso)
 $sensitivity
