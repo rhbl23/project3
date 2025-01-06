@@ -80,6 +80,10 @@ for (i in 1:length(nn)) {
     y_pred <- predict(cv_fit, s = best_lambda, newx = x_matrix)
     res_lasso[counter, 104] <- var(y_vector - y_pred)
     
+    # Calculate and store Mean Squared Error (MSE)
+    mse <- mean((y_vector - y_pred)^2)
+    res_lasso[counter, 25] <- mse
+
     # Increment the counter
     if (counter < nrow(res_lasso)) counter <- counter + 1
   }
