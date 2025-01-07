@@ -67,13 +67,12 @@ for (i in 1:length(nn)) {
     y_vector <- dd$y                 # Outcome variable
     
     # Fit Hi Lasso model
-    hi_lasso <- HiLasso(q1 = 100, q2 = 100, random_state = 123, L = 30)
+    hi_lasso <- HiLasso(q1 = 50, q2 = 50, random_state = 123, L = 30)
     hi_lasso <- fit.HiLasso(hi_lasso, x_matrix, y_vector)
     
     # Extract the coefficients for intercept and x1 to x100
     res_hi[counter,3] <- hi_lasso$intercept_
     res_hi[counter, 4:103] <- hi_lasso$coef_[1:100]  # 1 intercept + 100 coefficients
-    
     
     # Calculate and store the estimated residual variance (sigma^2)
     hl_coefficients <- as.numeric(hi_lasso$coefficients[-1])
