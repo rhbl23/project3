@@ -142,6 +142,8 @@ compute_aggregated_metrics <- function(res_lasso) {
   ))
 }
 
+boxplot(res_random[, "mse"] ~ res_random[, "nn"],main='randomlasso',col="lightgreen")
+
 compute_aggregated_metrics(res_random)
 $sensitivity
 [1] 0.8866667
