@@ -64,7 +64,7 @@ for (i in 1:length(nn)) {
     
     # Calculate and store Mean Squared Error (MSE)
     mse <- mean((y_vector - y_pred)^2)
-    res_hi[counter, 25] <- mse
+    res_hi[counter, 105] <- mse
     
     # Increment the counter
     if (counter < nrow(res_hi)) counter <- counter + 1
