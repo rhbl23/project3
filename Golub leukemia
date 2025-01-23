@@ -1,0 +1,29 @@
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# package detail in https://www.bioconductor.org/packages/release/data/experiment/html/golubEsets.html
+# and https://www.bioconductor.org/packages/release/data/experiment/manuals/golubEsets/man/golubEsets.pdf
+BiocManager::install("golubEsets")
+
+library(golubEsets)
+# List all data sets
+data(package = "golubEsets")
+# Data sets in package ‘golubEsets’:
+# Golub_Merge                     Combined Test and Training Sets from the Golub Paper
+# Golub_Test                      Test Set Data from the Golub Paper
+# Golub_Train                     Training Set from the Golub Paper
+
+data(Golub_Train)
+
+#The gene expression matrix X was extracted and transposed
+X <- exprs(Golub_Train)
+X_scale <- scale(X)
+
+pData(Golub_Train)
+y <- pData(Golub_Train)$PS
+y <- as.matrix(y)
+
+#lasso
+cv_lasso <- cv.glmnet(t(X_scale), y, alpha = 1)
+best_lambda <- cv_lasso$lambda.min
+lasso_coefficients <- coef(cv_lasso, s = "lambda.min")
