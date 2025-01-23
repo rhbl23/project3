@@ -18,12 +18,75 @@ data(Golub_Train)
 #The gene expression matrix X was extracted and transposed
 X <- exprs(Golub_Train)
 X_scale <- scale(X)
-
-pData(Golub_Train)
 y <- pData(Golub_Train)$PS
 y <- as.matrix(y)
+
 
 #lasso
 cv_lasso <- cv.glmnet(t(X_scale), y, alpha = 1)
 best_lambda <- cv_lasso$lambda.min
-lasso_coefficients <- coef(cv_lasso, s = "lambda.min")
+lasso_coefficients <- as.matrix(coef(cv_lasso, s = "lambda.min"))
+
+coef_lasso <- data.frame(
+  Gene = rownames(lasso_coefficients),
+  Coefficient = as.numeric(lasso_coefficients)
+)
+
+# Remove the intercept row (if present)
+coef_lasso <- coef_lasso[coef_lasso$Gene != "(Intercept)", ]
+
+# Add a column for the absolute value of coefficients
+coef_lasso$AbsCoefficient <- abs(coef_lasso$Coefficient)
+coef_lasso <- coef_lasso[order(coef_lasso$AbsCoefficient, decreasing = TRUE), ]
+top_genes_lasso <- head(coef_lasso, 20)
+print(top_genes_lasso)
+
+
+
+#randomlasso
+random_lasso <- RandomLasso(q1 = 3565, q2 = 3565, B = 'auto', 
+                            random_state = 123, L = 50, threshold = 1/38)
+random_lasso <- fit.RandomLasso(random_lasso, t(X_scale), y, sample_weight = NULL)
+random_coefficients <- as.matrix(random_lasso$coefficients)
+rownames(random_coefficients) <- rownames(lasso_coefficients)
+
+coef_random <- data.frame(
+  Gene = rownames(random_coefficients),
+  Coefficient = as.numeric(random_coefficients)
+)
+coef_random$AbsCoefficient <- abs(coef_random$Coefficient)
+coef_random <- coef_random[order(coef_random$AbsCoefficient, decreasing = TRUE), ]
+top_genes_random <- head(coef_random, 10)
+print(top_genes_random)
+
+
+
+#hilasso
+hi_lasso <- HiLasso(q1 = 3565, q2 = 3565, random_state = 123, L = 30)
+hi_lasso <- fit.HiLasso(hi_lasso, t(X_scale), y, sample_weight = NULL)
+hi_coefficients <- as.matrix(hi_lasso$coefficients)
+
+coef_hi <- data.frame(
+  Gene = rownames(lasso_coefficients),
+  Coefficient = as.numeric(hi_coefficients)
+)
+
+coef_hi <- coef_hi [coef_hi $Gene != "(Intercept)", ]
+coef_hi$AbsCoefficient <- abs(coef_hi$Coefficient)
+coef_hi<- coef_hi[order(coef_hi$AbsCoefficient, decreasing = TRUE), ]
+top_genes_hi <- head(coef_hi, 10)
+print(top_genes_hi)
+
+
+
+#stabs
+library("stabs")
+stabs_lasso <- stabsel(t(X_scale), y, fitfun = glmnet.lasso, cutoff = 0.75,PFER = 1)
+stabs_prob <- as.matrix(stabs_lasso$max)
+prob <- data.frame(
+  Gene = rownames(stabs_prob),
+  prbability = as.numeric(stabs_prob)
+)
+prob<- prob[order(prob$prbability, decreasing = TRUE), ]
+top_genes_stabs <- head(prob, 10)
+print(top_genes_stabs)
