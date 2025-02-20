@@ -5,7 +5,7 @@ library(glmnet)
 library(progress)
 
 # Standardization function
-standardization <- function(X, y, family = "gaussian") { 
+standardization <- function(X, y, family = "gaussian") {  
   X_mean <- colMeans(X)
   X_sd <- apply(X, 2, sd)
   X_sc <- scale(X, center = X_mean, scale = X_sd)
@@ -18,13 +18,20 @@ standardization <- function(X, y, family = "gaussian") {
     y_mean <- NULL
   }
   
+  X_min <- apply(X, 2, min)
+  X_max <- apply(X, 2, max)
+  
+  X_norm <- (X - X_min) / (X_max - X_min)
+  # scale to [-1, 1]
+  X_sc <- 2 * (X - X_min) / (X_max - X_min) - 1
+  
   list(X_sc = X_sc, y_sc = y_sc, X_sd = X_sd, y_mean = y_mean)
 }
 
 # Constructor function for Hi-LASSO class
 HiLasso <- function(q1 = "auto", q2 = "auto", L = 30, alpha = 0.05, 
                     logistic = FALSE, random_state = NULL, n_jobs = 1,
-                    family = "gaussian") { 
+                    family = "gaussian") {
   hl <- list(
     q1 = q1,
     q2 = q2,
@@ -52,12 +59,12 @@ HiLasso <- function(q1 = "auto", q2 = "auto", L = 30, alpha = 0.05,
 fit.HiLasso <- function(hl, X, y, sample_weight = NULL) {
   if (hl$family == "binomial") {
     if (is.factor(y)) {
-      y <- as.numeric(y) - 1  # transform to 0/1
-      if (!all(y %in% c(0, 1))) {
+      y <- as.numeric(y)
+      if (!all(y %in% c(1, 2))) {
         stop("y must be a binary factor with two levels.")
       }
     } else {
-      if (!all(unique(y) %in% c(0, 1))) {
+      if (!all(unique(y) %in% c(1, 2))) {
         stop("For binomial family, y must be 0/1 or a two-level factor.")
       }
     }
@@ -213,7 +220,9 @@ estimate_coef_h <- function(hl, bootstrap_number, q, method) {
   }
   
   # Assign coefficients back to beta vector
-  beta[bst_predictor_idx + 1] <- coef_fit / X_sd
+  # beta[bst_predictor_idx + 1] <- coef_fit / X_sd
+  # Min-max normlization without X_sd
+  beta[bst_predictor_idx + 1] <- coef_fit
   
   return(beta)
 }
@@ -271,31 +280,4 @@ print.HiLasso <- function(hl, ...) {
     cat("Model has not been fitted yet.\n")
   }
 }
-
-# Example usage
-set.seed(123)   # For reproducibility
-
-library(datamicroarray)
-# more data in https://github.com/ramhiser/datamicroarray
-data('alon', package = 'datamicroarray')
-
-dim(alon$x)
-
-table(alon$y)
-
-library(glmnet)
-X <- alon$x
-dim(X)
-y <- factor(alon$y)
-
-threshold <- 0.0001 # Threshold for selecting predictors
-
-hi_lasso <- HiLasso(q1 = 100, q2 = 100,
-                    random_state = 123, L = 30, family="binomial")
-
-# Fit the model
-hi_lasso <- fit.HiLasso(hi_lasso, X, y, sample_weight = NULL)
-
-# Print the model summary
-print(hi_lasso)
 
